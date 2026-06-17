@@ -1,102 +1,55 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>McMaster Launcher</title>
-    <style>
-      /* Theme anchored to Onshape: light #FFFFFF, dark #333333. */
-      :root {
-        --bg: #ffffff;
-        --text: #1a1a18;
-        --text-muted: #6b6b66;
-        --field-bg: #ffffff;
-        --field-border: #cfcdc6;
-        --field-border-focus: #378add;
-        --btn-bg: #e6f1fb;
-        --btn-fg: #185fa5;
-        --btn-border: #b5d4f4;
-        --btn-bg-hover: #d8e9f8;
-        --logo-bg: #fbeaea;
-        --logo-fg: #a32d2d;
-        --toggle-border: #cfcdc6;
-      }
-      :root[data-theme="dark"] {
-        --bg: #333333;
-        --text: #e8e8e6;
-        --text-muted: #a3a39e;
-        --field-bg: #3d3d3d;
-        --field-border: #555553;
-        --field-border-focus: #5a9be0;
-        --btn-bg: #1e3a52;
-        --btn-fg: #9cc5ef;
-        --btn-border: #2f567c;
-        --btn-bg-hover: #244463;
-        --logo-bg: #4a2424;
-        --logo-fg: #f0a0a0;
-        --toggle-border: #555553;
-      }
-
-      * { box-sizing: border-box; }
-      html, body { margin: 0; height: 100%; }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background: var(--bg); color: var(--text);
-        display: flex; align-items: flex-start; justify-content: center;
-        transition: background 0.15s, color 0.15s;
-      }
-      .wrap { width: 100%; max-width: 360px; padding: 18px 16px; position: relative; }
-      .head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-      .logo {
-        width: 26px; height: 26px; border-radius: 6px;
-        background: var(--logo-bg); color: var(--logo-fg);
-        display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px;
-      }
-      .title { font-size: 15px; font-weight: 500; margin: 0; }
-      .hint { font-size: 11px; color: var(--text-muted); margin: 2px 0 0; }
-      .searchrow { display: flex; gap: 8px; }
-      #q {
-        flex: 1; height: 38px; padding: 0 12px; font-size: 14px;
-        background: var(--field-bg); color: var(--text);
-        border: 1px solid var(--field-border); border-radius: 8px; outline: none;
-      }
-      #q:focus { border-color: var(--field-border-focus); box-shadow: 0 0 0 3px rgba(55,138,221,0.18); }
-      #go {
-        height: 38px; padding: 0 16px; font-size: 13px; font-weight: 500; cursor: pointer;
-        background: var(--btn-bg); color: var(--btn-fg);
-        border: 1px solid var(--btn-border); border-radius: 8px;
-      }
-      #go:hover { background: var(--btn-bg-hover); }
-      .note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin: 14px 0 0; }
-      .theme-toggle {
-        position: absolute; top: 18px; right: 16px;
-        width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
-        background: transparent; color: var(--text-muted);
-        border: 1px solid var(--toggle-border);
-        display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1;
-      }
-      .theme-toggle:hover { color: var(--text); }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <button class="theme-toggle" id="theme" aria-label="Toggle light/dark">&#9680;</button>
-      <div class="head">
-        <div class="logo">M</div>
-        <div>
-          <p class="title">Search McMaster</p>
-          <p class="hint">Opens results in a new tab — pick a part, use the chip to import.</p>
-        </div>
-      </div>
-
-      <div class="searchrow">
-        <input id="q" type="text" placeholder="e.g. M6 screw" autocomplete="off" />
-        <button id="go">Search</button>
-      </div>
-
-      <p class="note" id="status"></p>
-    </div>
-
-    <script src="launcher.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>McMaster-Carr Launcher</title>
+<style>
+:root{
+ --bg:#ffffff;--card:rgba(255,255,255,.85);--text:#1b1b1b;--muted:#666;
+ --green:#2f6f3e;--green-hover:#3b854d;--border:rgba(0,0,0,.08);
+ --input-bg:#fff;--shadow:0 8px 30px rgba(0,0,0,.08);
+}
+:root[data-theme="dark"]{
+ --bg:#333333;--card:rgba(58,58,58,.85);--text:#f3f3f3;--muted:#a8a8a8;
+ --green:#2f6f3e;--green-hover:#3b854d;--border:rgba(255,255,255,.08);
+ --input-bg:#404040;--shadow:0 12px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box} html,body{height:100%;margin:0}
+body{display:flex;justify-content:center;align-items:center;background:var(--bg);
+font-family:Segoe UI,Roboto,sans-serif;color:var(--text)}
+.hero{
+ width:min(900px,92vw);padding:50px;border-radius:24px;
+ background:var(--card);backdrop-filter:blur(12px);
+ border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;
+}
+.logo{width:500px;max-width:90%;height:auto;margin-bottom:30px}
+.searchrow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+#q{
+ width:420px;height:52px;padding:0 16px;border-radius:14px;
+ border:1px solid #555;background:var(--input-bg);color:var(--text);font-size:16px
+}
+#go{
+ height:52px;padding:0 24px;border:none;border-radius:14px;
+ background:var(--green);color:#fff;font-weight:600;cursor:pointer
+}
+#go:hover{background:var(--green-hover)}
+.theme-toggle{
+ position:fixed;top:16px;right:16px;width:42px;height:42px;border-radius:10px
+}
+#status{margin-top:16px;color:var(--muted)}
+</style>
+</head>
+<body>
+<button id="theme" class="theme-toggle">☀️</button>
+<main class="hero">
+<img src="mcmaster-logo.png" class="logo" alt="McMaster-Carr">
+<div class="searchrow">
+<input id="q" placeholder="Search McMaster parts..." autocomplete="off">
+<button id="go">Search</button>
+</div>
+<div id="status"></div>
+</main>
+<script src="launcher.js"></script>
+</body>
 </html>
