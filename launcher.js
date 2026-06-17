@@ -125,8 +125,6 @@ const KEYWORD_MAP = {
   function apply(theme) {
     current = theme === "dark" ? "dark" : "light";
     root.setAttribute("data-theme", current);
-    const logo = document.getElementById("logo");
-    if (logo) logo.src = current === "dark" ? "logo-dark.png" : "logo-light.png";
     try { localStorage.setItem("mc-theme", current); } catch {}
   }
 
