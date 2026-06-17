@@ -2,54 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>McMaster-Carr Launcher</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>McMaster-Carr for Onshape</title>
 <style>
 :root{
- --bg:#ffffff;--card:rgba(255,255,255,.85);--text:#1b1b1b;--muted:#666;
- --green:#2f6f3e;--green-hover:#3b854d;--border:rgba(0,0,0,.08);
- --input-bg:#fff;--shadow:0 8px 30px rgba(0,0,0,.08);
+ --bg:#ffffff; --panel:#f7f8fa; --surface:#ffffff;
+ --border:#d9dde3; --text:#1f2328; --muted:#6b7280;
+ --accent:#2f6f3e; --accent-hover:#3a854c;
 }
 :root[data-theme="dark"]{
- --bg:#333333;--card:rgba(58,58,58,.85);--text:#f3f3f3;--muted:#a8a8a8;
- --green:#2f6f3e;--green-hover:#3b854d;--border:rgba(255,255,255,.08);
- --input-bg:#404040;--shadow:0 12px 30px rgba(0,0,0,.35);
+ --bg:#333333; --panel:#3c3c3c; --surface:#404040;
+ --border:#525252; --text:#f2f2f2; --muted:#b9b9b9;
+ --accent:#2f6f3e; --accent-hover:#3a854c;
 }
-*{box-sizing:border-box} html,body{height:100%;margin:0}
-body{display:flex;justify-content:center;align-items:center;background:var(--bg);
-font-family:Segoe UI,Roboto,sans-serif;color:var(--text)}
-.hero{
- width:min(900px,92vw);padding:50px;border-radius:24px;
- background:var(--card);backdrop-filter:blur(12px);
- border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
-.logo{width:500px;max-width:90%;height:auto;margin-bottom:30px}
-.searchrow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.app{height:100%;display:flex;flex-direction:column}
+.header{
+ display:flex;justify-content:space-between;align-items:center;
+ padding:12px 16px;background:var(--panel);
+ border-bottom:1px solid var(--border);
+}
+.title{font-size:14px;font-weight:600}
+.subtitle{font-size:12px;color:var(--muted);margin-top:2px}
+.theme{
+ background:var(--surface);border:1px solid var(--border);
+ border-radius:6px;width:32px;height:32px;cursor:pointer;color:var(--text);
+}
+.content{
+ flex:1;display:flex;align-items:center;justify-content:center;
+ padding:24px;
+}
+.card{
+ width:min(680px,100%);
+ text-align:center;
+}
+.logo{
+ width:min(420px,90%);
+ height:auto;
+ margin-bottom:28px;
+}
+.search{
+ display:flex;gap:10px;max-width:560px;margin:0 auto;
+}
+.input-wrap{position:relative;flex:1}
+.icon{
+ position:absolute;left:12px;top:50%;transform:translateY(-50%);
+ color:var(--muted);font-size:14px;
+}
 #q{
- width:420px;height:52px;padding:0 16px;border-radius:14px;
- border:1px solid #555;background:var(--input-bg);color:var(--text);font-size:16px
+ width:100%;height:40px;padding:0 12px 0 34px;
+ border-radius:8px;border:1px solid var(--border);
+ background:var(--surface);color:var(--text);
 }
+#q:focus{outline:none;border-color:var(--accent)}
 #go{
- height:52px;padding:0 24px;border:none;border-radius:14px;
- background:var(--green);color:#fff;font-weight:600;cursor:pointer
+ height:40px;padding:0 18px;border:none;border-radius:8px;
+ background:var(--accent);color:white;font-weight:600;cursor:pointer;
 }
-#go:hover{background:var(--green-hover)}
-.theme-toggle{
- position:fixed;top:16px;right:16px;width:42px;height:42px;border-radius:10px
+#go:hover{background:var(--accent-hover)}
+.status{
+ margin-top:12px;font-size:12px;color:var(--muted);
 }
-#status{margin-top:16px;color:var(--muted)}
+.footer{
+ border-top:1px solid var(--border);
+ padding:10px 16px;font-size:12px;color:var(--muted);
+}
+@media (max-width:520px){
+ .search{flex-direction:column}
+ #go{width:100%}
+}
 </style>
 </head>
 <body>
-<button id="theme" class="theme-toggle">☀️</button>
-<main class="hero">
-<img src="mcmaster-logo.png" class="logo" alt="McMaster-Carr">
-<div class="searchrow">
-<input id="q" placeholder="Search McMaster parts..." autocomplete="off">
-<button id="go">Search</button>
+<div class="app">
+  <div class="header">
+    <div>
+      <div class="title">McMaster-Carr</div>
+      <div class="subtitle">Search and import hardware into Onshape</div>
+    </div>
+    <button id="theme" class="theme">◐</button>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <img src="mcmaster-logo.svg" class="logo" alt="McMaster-Carr">
+      <div class="search">
+        <div class="input-wrap">
+          <span class="icon">⌕</span>
+          <input id="q" placeholder="Search parts, fasteners, bearings..." autocomplete="off">
+        </div>
+        <button id="go">Search</button>
+      </div>
+      <div id="status" class="status"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Opens McMaster-Carr in a new tab. Select a part and use the extension to import it.
+  </div>
 </div>
-<div id="status"></div>
-</main>
 <script src="launcher.js"></script>
 </body>
 </html>
