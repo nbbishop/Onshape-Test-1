@@ -12,10 +12,10 @@ function buildSearchUrl(term) {
   // McMaster uses ?s=<terms> with + between words. encodeURIComponent gives
   // %20 for spaces, so convert those to + which matches McMaster's own URLs.
   const s = encodeURIComponent(term.trim()).replace(/%20/g, "+");
-  // Top-level search — lets McMaster route to the right category itself.
-  // (A real M6-screw search lands at /products/screws/?s=m6+screw; McMaster
-  //  picks the category from the terms. Verify routing during the test.)
-  return `https://www.mcmaster.com/?s=${s}`;
+  // Try the /products/ search path — McMaster's own search routes through here
+  // and may auto-pick the category. (Bare homepage ?s= landed on the homepage;
+  // this is the next thing to try.)
+  return `https://www.mcmaster.com/products/?s=${s}`;
 }
 
 const input = document.getElementById("q");
@@ -51,3 +51,37 @@ input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") launch();
 });
 input.focus();
+
+// ---- Theme: match Onshape (light #FFFFFF / dark #333333) -------------------
+// On load, follow the system/browser preference. The toggle flips it manually
+// and remembers the choice for this browser.
+(function () {
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme");
+
+  function apply(theme) {
+    root.setAttribute("data-theme", theme);
+  }
+
+  // Saved choice wins; otherwise follow the OS/browser dark-mode setting.
+  let saved = null;
+  try { saved = localStorage.getItem("mc-theme"); } catch {}
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  apply(saved || (prefersDark ? "dark" : "light"));
+
+  // If the user hasn't set a manual choice, keep following the system setting
+  // when it changes.
+  if (!saved && window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+      apply(e.matches ? "dark" : "light");
+    });
+  }
+
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      apply(next);
+      try { localStorage.setItem("mc-theme", next); } catch {}
+    });
+  }
+})();
