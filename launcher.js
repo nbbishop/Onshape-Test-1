@@ -52,36 +52,34 @@ input.addEventListener("keydown", (e) => {
 });
 input.focus();
 
-// ---- Theme: match Onshape (light #FFFFFF / dark #333333) -------------------
-// On load, follow the system/browser preference. The toggle flips it manually
-// and remembers the choice for this browser.
+// ---- Theme: match Onshape ---------------------------------------------------
+// Onshape embeds this app with a `?theme=dark|light` URL parameter telling us
+// the user's current Onshape theme. We read that and match it automatically.
+// Falls back to the browser preference when opened outside Onshape. The toggle
+// still lets you override manually.
 (function () {
   const root = document.documentElement;
   const toggle = document.getElementById("theme");
 
+  let current = "light";
   function apply(theme) {
-    root.setAttribute("data-theme", theme);
+    current = theme === "dark" ? "dark" : "light";
+    root.setAttribute("data-theme", current);
+    try { localStorage.setItem("mc-theme", current); } catch {}
   }
 
-  // Saved choice wins; otherwise follow the OS/browser dark-mode setting.
+  // Priority: Onshape's theme param > saved manual choice > browser preference.
+  const params = new URLSearchParams(location.search);
+  const onshapeTheme = params.get("theme"); // "dark" or "light" when embedded
   let saved = null;
   try { saved = localStorage.getItem("mc-theme"); } catch {}
   const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  apply(saved || (prefersDark ? "dark" : "light"));
 
-  // If the user hasn't set a manual choice, keep following the system setting
-  // when it changes.
-  if (!saved && window.matchMedia) {
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-      apply(e.matches ? "dark" : "light");
-    });
-  }
+  apply(onshapeTheme || saved || (prefersDark ? "dark" : "light"));
 
   if (toggle) {
-    toggle.addEventListener("click", () => {
-      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      apply(next);
-      try { localStorage.setItem("mc-theme", next); } catch {}
+    toggle.addEventListener("click", function () {
+      apply(current === "dark" ? "light" : "dark");
     });
   }
 })();
