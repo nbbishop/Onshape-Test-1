@@ -1,112 +1,92 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>McMaster-Carr for Onshape</title>
-<style>
-:root{
- --bg:#ffffff; --panel:#f7f8fa; --surface:#ffffff;
- --border:#d9dde3; --text:#1f2328; --muted:#6b7280;
- --accent:#2f6f3e; --accent-hover:#3a854c;
-}
-:root[data-theme="dark"]{
- --bg:#333333; --panel:#3c3c3c; --surface:#404040;
- --border:#525252; --text:#f2f2f2; --muted:#b9b9b9;
- --accent:#2f6f3e; --accent-hover:#3a854c;
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{
- background:var(--bg);
- color:var(--text);
- font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-}
-.app{height:100%;display:flex;flex-direction:column}
-.header{
- display:flex;justify-content:space-between;align-items:center;
- padding:12px 16px;background:var(--panel);
- border-bottom:1px solid var(--border);
-}
-.title{font-size:14px;font-weight:600}
-.subtitle{font-size:12px;color:var(--muted);margin-top:2px}
-.theme{
- background:var(--surface);border:1px solid var(--border);
- border-radius:6px;width:32px;height:32px;cursor:pointer;color:var(--text);
-}
-.content{
- flex:1;display:flex;align-items:center;justify-content:center;
- padding:24px;
-}
-.card{
- width:min(680px,100%);
- text-align:center;
-}
-.logo{
- width:min(420px,90%);
- height:auto;
- margin-bottom:28px;
-}
-.search{
- display:flex;gap:10px;max-width:560px;margin:0 auto;
-}
-.input-wrap{position:relative;flex:1}
-.icon{
- position:absolute;left:12px;top:50%;transform:translateY(-50%);
- color:var(--muted);font-size:14px;
-}
-#q{
- width:100%;height:40px;padding:0 12px 0 34px;
- border-radius:8px;border:1px solid var(--border);
- background:var(--surface);color:var(--text);
-}
-#q:focus{outline:none;border-color:var(--accent)}
-#go{
- height:40px;padding:0 18px;border:none;border-radius:8px;
- background:var(--accent);color:white;font-weight:600;cursor:pointer;
-}
-#go:hover{background:var(--accent-hover)}
-.status{
- margin-top:12px;font-size:12px;color:var(--muted);
-}
-.footer{
- border-top:1px solid var(--border);
- padding:10px 16px;font-size:12px;color:var(--muted);
-}
-@media (max-width:520px){
- .search{flex-direction:column}
- #go{width:100%}
-}
-</style>
-</head>
-<body>
-<div class="app">
-  <div class="header">
-    <div>
-      <div class="title">McMaster-Carr</div>
-      <div class="subtitle">Search and import hardware into Onshape</div>
-    </div>
-    <button id="theme" class="theme">◐</button>
-  </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>McMaster Search</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #1a1a18;
+        --text-muted: #6b6b66;
+        --field-bg: #ffffff;
+        --field-border: #cfcdc6;
+        --field-border-focus: #378add;
+        --btn-bg: #e6f1fb;
+        --btn-fg: #185fa5;
+        --btn-border: #b5d4f4;
+        --btn-bg-hover: #d8e9f8;
+        --toggle-border: #cfcdc6;
+      }
+      :root[data-theme="dark"] {
+        --bg: #333333;
+        --text: #e8e8e6;
+        --text-muted: #a3a39e;
+        --field-bg: #3d3d3d;
+        --field-border: #555553;
+        --field-border-focus: #5a9be0;
+        --btn-bg: #1e3a52;
+        --btn-fg: #9cc5ef;
+        --btn-border: #2f567c;
+        --btn-bg-hover: #244463;
+        --toggle-border: #555553;
+      }
 
-  <div class="content">
-    <div class="card">
-      <img src="mcmaster-logo.svg" class="logo" alt="McMaster-Carr">
-      <div class="search">
-        <div class="input-wrap">
-          <span class="icon">⌕</span>
-          <input id="q" placeholder="Search parts, fasteners, bearings..." autocomplete="off">
-        </div>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg); color: var(--text);
+        min-height: 100vh;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        transition: background 0.15s, color 0.15s;
+      }
+      /* Push content slightly above true center per the layout. */
+      .stage {
+        width: 100%; max-width: 420px; padding: 0 20px;
+        margin-top: -8vh;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .logo {
+        width: 320px; max-width: 90%; height: auto;
+        margin-bottom: 26px; user-select: none;
+      }
+      .searchrow { display: flex; gap: 8px; width: 100%; }
+      #q {
+        flex: 1; height: 42px; padding: 0 14px; font-size: 15px;
+        background: var(--field-bg); color: var(--text);
+        border: 1px solid var(--field-border); border-radius: 9px; outline: none;
+      }
+      #q:focus { border-color: var(--field-border-focus); box-shadow: 0 0 0 3px rgba(55,138,221,0.18); }
+      #go {
+        height: 42px; padding: 0 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+        background: var(--btn-bg); color: var(--btn-fg);
+        border: 1px solid var(--btn-border); border-radius: 9px; white-space: nowrap;
+      }
+      #go:hover { background: var(--btn-bg-hover); }
+      .note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin: 12px 0 0; text-align: center; min-height: 14px; }
+      .theme-toggle {
+        position: fixed; top: 16px; right: 16px;
+        width: 30px; height: 30px; border-radius: 7px; cursor: pointer;
+        background: transparent; color: var(--text-muted);
+        border: 1px solid var(--toggle-border);
+        display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1;
+      }
+      .theme-toggle:hover { color: var(--text); }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" id="theme" aria-label="Toggle light/dark">&#9680;</button>
+    <div class="stage">
+      <img class="logo" src="logo.png" alt="McMaster-Carr" />
+      <div class="searchrow">
+        <input id="q" type="text" placeholder="Search McMaster…" autocomplete="off" />
         <button id="go">Search</button>
       </div>
-      <div id="status" class="status"></div>
+      <p class="note" id="status"></p>
     </div>
-  </div>
 
-  <div class="footer">
-    Opens McMaster-Carr in a new tab. Select a part and use the extension to import it.
-  </div>
-</div>
-<script src="launcher.js"></script>
-</body>
+    <script src="launcher.js"></script>
+  </body>
 </html>
